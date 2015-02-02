@@ -22,16 +22,13 @@
 
 -(BOOL)tabBarController:(UITabBarController *)tabBarController shouldSelectViewController:(UIViewController *)viewController
 {
-    if ([viewController isKindOfClass:[UINavigationController class]]) {
-        UINavigationController *navController = (UINavigationController *)viewController;
-        if ([navController.topViewController isKindOfClass:[RoleViewController class]]) {
-            RoleViewController *rvc = (RoleViewController *)[navController topViewController];
-            [rvc setSelectedRole:^(Role *role) {
-                UIViewController *viewController = self.viewControllers[0];
-                [viewController setValue:role forKey:@"role"];
-                [self setSelectedIndex:0];
-            }];
-        }
+    id vc = [viewController valueForKey:@"topViewController"];
+    if([vc respondsToSelector:@selector(setSelectedRole:)]){
+        [vc setSelectedRole:^(Role *role) {
+            UIViewController *viewController = self.viewControllers[0];
+            [viewController setValue:role forKey:@"role"];
+            [self setSelectedIndex:0];
+        }];
     }
     return YES;
 }
